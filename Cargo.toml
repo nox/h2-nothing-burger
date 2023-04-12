@@ -1,0 +1,16 @@
+[package]
+name = "flood-repro"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+atty = "0.2"
+bytes = "1"
+h2 = { git = "https://github.com/hyperium/h2.git", branch = "cve-repro" }
+http = "0.2"
+tokio = { version = "1.27", features = ["macros", "net", "rt-multi-thread"] }
+tracing = { version = "0.1.21", default-features = false, features = ["std"] }
+tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt"] }
+tracing-tree = "0.2"
