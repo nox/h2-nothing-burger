@@ -15,7 +15,7 @@ async fn main() {
             .send_request(http::Request::get("/").body(()).unwrap(), false)
             .unwrap();
 
-        // let _res = res.await.unwrap();
+        let _res = res.await.unwrap();
 
         send_stream.send_reset(h2::Reason::NO_ERROR);
     }
