@@ -35,7 +35,7 @@ async fn main() {
         client.assert_server_handshake().await;
 
         for i in 1..=100 {
-            client.send_frame(frames::headers(i * 2 + 1).request("GET", "/")).await;
+            client.send_frame(frames::headers(i * 2 + 1).request("GET", "http://localhost.local/")).await;
             client.send_frame(frames::reset(i * 2 + 1).protocol_error()).await;
         }
     };
