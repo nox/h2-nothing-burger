@@ -21,7 +21,7 @@ async fn main() {
 
     let srv = async move {
         let mut h2_conn = h2::server::Builder::new()
-            .max_concurrent_streams(20_000)
+            .max_concurrent_streams(50)
             .handshake::<_, bytes::Bytes>(io)
             .await
             .unwrap();
