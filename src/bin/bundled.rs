@@ -18,25 +18,30 @@ async fn main() {
     // tracing::info!("Starting repro");
 
     let (io, mut client) = h2_support::mock::new();
+    let (done_tx, mut done_rx) = tokio::sync::mpsc::channel(1);
 
     let srv = async move {
         let mut h2_conn = h2::server::Builder::new()
-            .max_concurrent_streams(50)
+            .max_concurrent_streams(2)
             .handshake::<_, bytes::Bytes>(io)
             .await
             .unwrap();
 
         while let Some(res) = h2_conn.accept().await {
-            let (_req, mut send_response) = res.unwrap();
+            let (_req, _send_response) = res.unwrap();
+
+            done_rx.recv().await.unwrap();
         }
     };
 
     let client = async move {
         client.assert_server_handshake().await;
 
-        for i in 1..=100 {
+        for i in 0..4 {
             client.send_frame(frames::headers(i * 2 + 1).request("GET", "http://localhost.local/")).await;
             client.send_frame(frames::reset(i * 2 + 1).protocol_error()).await;
+
+            done_tx.send(()).await.unwrap();
         }
     };
 
